@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fat Blasters 🐢</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D0D2B;
+    --teal: #2ABFAA;
+    --green: #3DBE5A;
+    --yellow: #FFD700;
+    --red: #E8192C;
+    --white: #FFFFFF;
+    --card: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 20%, rgba(42,191,170,0.15) 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 80%, rgba(61,190,90,0.1) 0%, transparent 50%);
+  }
+
+  h1, h2, h3, .big { font-family: 'Bebas Neue', cursive; letter-spacing: 2px; }
+
+  /* SCREENS */
+  .screen { display: none; min-height: 100vh; padding: 20px; max-width: 480px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  /* HEADER */
+  .logo-area {
+    text-align: center;
+    padding: 30px 0 20px;
+  }
+  .turtle-emoji { font-size: 60px; animation: float 3s ease-in-out infinite; display: block; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .logo-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 52px;
+    background: linear-gradient(135deg, var(--teal), var(--green), var(--yellow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 4px;
+  }
+  .logo-sub {
+    font-size: 13px;
+    color: var(--teal);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--teal), var(--green));
+    color: var(--navy);
+  }
+  .btn-yellow {
+    background: var(--yellow);
+    color: var(--navy);
+  }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--teal);
+    color: var(--teal);
+  }
+  .btn-red {
+    background: var(--red);
+    color: white;
+  }
+  .btn-sm {
+    width: auto;
+    display: inline-block;
+    padding: 8px 18px;
+    font-size: 14px;
+    margin: 4px;
+  }
+
+  /* SELECT */
+  select, input[type="password"], input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    margin-bottom: 12px;
+    appearance: none;
+  }
+  select option { background: var(--navy); color: white; }
+  input::placeholder { color: rgba(255,255,255,0.4); }
+
+  /* TASK ITEMS */
+  .task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .task-item.checked {
+    background: rgba(42,191,170,0.15);
+    border-color: var(--teal);
+  }
+  .task-left { display: flex; align-items: center; gap: 12px; }
+  .task-emoji { font-size: 28px; }
+  .task-name { font-weight: 700; font-size: 15px; }
+  .task-pts { font-size: 12px; color: var(--teal); font-weight: 600; }
+  .task-check {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .task-item.checked .task-check {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+
+  /* POINTS BADGE */
+  .points-badge {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(42,191,170,0.2), rgba(61,190,90,0.2));
+    border: 1px solid var(--teal);
+    border-radius: 16px;
+    margin-bottom: 16px;
+  }
+  .points-number {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 64px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+  .points-label { font-size: 13px; color: var(--teal); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+
+  /* LEADERBOARD */
+  .lb-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .lb-item.rank-1 { background: rgba(255,215,0,0.15); border-color: var(--yellow); }
+  .lb-item.rank-2 { background: rgba(192,192,192,0.12); border-color: #C0C0C0; }
+  .lb-item.rank-3 { background: rgba(205,127,50,0.12); border-color: #CD7F32; }
+  .lb-item.me { border-color: var(--teal) !important; }
+  .lb-rank { font-family: 'Bebas Neue', cursive; font-size: 22px; width: 30px; text-align: center; }
+  .lb-name { flex: 1; font-weight: 700; font-size: 15px; }
+  .lb-pts { font-family: 'Bebas Neue', cursive; font-size: 24px; color: var(--yellow); }
+  .lb-pts-label { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+  /* UPLOAD AREA */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+  }
+  .upload-area:hover, .upload-area.has-file { border-color: var(--teal); background: rgba(42,191,170,0.08); }
+  .upload-area .upload-icon { font-size: 36px; margin-bottom: 8px; }
+  .upload-area p { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .upload-area.has-file p { color: var(--teal); font-weight: 700; }
+  #fileInput { display: none; }
+  .preview-img { width: 100%; border-radius: 8px; margin-top: 10px; max-height: 200px; object-fit: cover; }
+
+  /* NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: rgba(13,13,43,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-item .nav-icon { font-size: 22px; }
+  .nav-item .nav-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  .nav-item.active .nav-label { color: var(--teal); }
+  .nav-item.active .nav-icon { filter: drop-shadow(0 0 6px var(--teal)); }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+  .section-title span { color: var(--teal); }
+
+  /* STREAK */
+  .streak-row { display: flex; gap: 6px; justify-content: center; margin: 10px 0; }
+  .streak-day {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3);
+  }
+  .streak-day.done { background: var(--teal); border-color: var(--teal); color: var(--navy); }
+  .streak-day.today { border-color: var(--yellow); color: var(--yellow); }
+
+  /* ADMIN */
+  .admin-member {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .admin-member-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .admin-member-name { font-weight: 800; font-size: 16px; }
+  .admin-member-pts { font-family: 'Bebas Neue', cursive; font-size: 22px; color: var(--yellow); }
+  .admin-proof { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+  .proof-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); cursor: pointer; }
+  .proof-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-img { max-width: 100%; max-height: 80vh; border-radius: 12px; }
+  .modal-close {
+    position: absolute; top: 20px; right: 20px;
+    font-size: 32px; cursor: pointer; color: white;
+    background: rgba(0,0,0,0.5); border-radius: 50%;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: var(--teal); color: var(--navy);
+    padding: 12px 24px; border-radius: 100px;
+    font-weight: 800; font-size: 14px;
+    z-index: 300; opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  /* MISC */
+  .text-center { text-align: center; }
+  .text-teal { color: var(--teal); }
+  .text-yellow { color: var(--yellow); }
+  .text-muted { color: rgba(255,255,255,0.5); font-size: 13px; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mt-8 { margin-top: 8px; }
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tag-green { background: rgba(61,190,90,0.2); color: var(--green); }
+  .tag-red { background: rgba(232,25,44,0.2); color: var(--red); }
+  .tag-yellow { background: rgba(255,215,0,0.2); color: var(--yellow); }
+
+  @keyframes loading {
+    0% { width: 0%; margin-left: 0; }
+    50% { width: 100%; margin-left: 0; }
+    100% { width: 0%; margin-left: 100%; }
+  }
+
+  .pb-nav { padding-bottom: 80px; }
+
+  /* LOGIN SCREEN */
+  #loginScreen { display: flex; flex-direction: column; justify-content: center; min-height: 100vh; }
+
+  .weekly-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 4px;
+  }
+
+  .admin-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-num { font-family: 'Bebas Neue', cursive; font-size: 36px; color: var(--yellow); }
+  .stat-lbl { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+  .week-selector { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; }
+  .week-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .week-btn.active { background: var(--teal); color: var(--navy); border-color: var(--teal); }
+
+  /* WEEKLY TABLE */
+  .weekly-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: var(--card);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .weekly-table th {
+    background: #1a6e5a;
+    color: var(--yellow);
+    padding: 8px 6px;
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 13px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .weekly-table th:first-child { text-align: left; padding-left: 10px; }
+  .weekly-table td {
+    padding: 8px 6px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+    color: white;
+  }
+  .weekly-table td:first-child { text-align: left; padding-left: 10px; font-weight: 800; }
+  .weekly-table tr:last-child td { border-bottom: none; }
+  .weekly-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+  .weekly-table .total-col { color: var(--yellow); font-family: 'Bebas Neue', cursive; font-size: 16px; }
+  .weekly-table .rank-1 td:first-child { color: var(--yellow); }
+  .weekly-table .rank-2 td:first-child { color: #C0C0C0; }
+  .weekly-table .rank-3 td:first-child { color: #CD7F32; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="screen active">
+  <div style="padding: 20px; max-width: 480px; margin: 0 auto; width: 100%;">
+    <div class="logo-area">
+      <span class="turtle-emoji">🐢</span>
+      <div class="logo-title">Fat Blasters</div>
+      <div class="logo-sub">Slow & Steady Wins the Race</div>
+    </div>
+
+    <div class="card" style="margin-top: 30px;">
+      <div class="section-title" style="font-size:22px; margin-bottom:12px;">Select Your Name</div>
+      <select id="memberSelect">
+        <option value="">⏳ Loading members...</option>
+      </select>
+      <button class="btn btn-primary" onclick="memberLogin()">LET'S GO! 💪</button>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="font-size:22px; margin-bottom:12px; color: var(--yellow);">Admin Login</div>
+      <input type="password" id="adminPass" placeholder="Admin password..." />
+      <button class="btn btn-yellow" onclick="adminLogin()">ADMIN PANEL 🔐</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBER APP -->
+<div id="memberApp" class="screen">
+  <div class="pb-nav">
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-content active">
+      <div class="logo-area" style="padding-top:20px; padding-bottom:10px;">
+        <span style="font-size:36px;">🐢</span>
+        <div class="logo-title" style="font-size:36px;">Fat Blasters</div>
+      </div>
+
+      <div class="points-badge">
+        <div class="points-number" id="todayPts">0</div>
+        <div class="points-label">Points Today</div>
+        <div style="font-family:'Bebas Neue';font-size:28px;color:var(--white);margin-top:6px;" id="totalPtsDisplay">0 <span style="font-size:16px;color:var(--teal);">TOTAL PTS</span></div>
+      </div>
+
+      <!-- Streak -->
+      <div class="card">
+        <div style="font-weight:800;font-size:14px;margin-bottom:10px;">📅 This Week's Streak</div>
+        <div class="streak-row" id="streakRow"></div>
+      </div>
+
+      <!-- Daily Tasks -->
+      <div class="section-title">Daily <span>Tasks</span></div>
+
+      <div class="task-item" id="task-calories" onclick="toggleTask('calories')">
+        <div class="task-left">
+          <span class="task-emoji">🔥</span>
+          <div>
+            <div class="task-name">Calorie Deficit</div>
+            <div class="task-pts">+5 points • Upload MFP screenshot below</div>
+          </div>
+        </div>
+        <div class="task-check" id="check-calories"></div>
+      </div>
+
+      <div class="task-item" id="task-water" onclick="toggleTask('water')">
+        <div class="task-left">
+          <span class="task-emoji">💧</span>
+          <div>
+            <div class="task-name">Water Intake</div>
+            <div class="task-pts">+1 point • 1.5 litres minimum</div>
+          </div>
+        </div>
+        <div class="task-check" id="check-water"></div>
+      </div>
+
+      <div class="task-item" id="task-exercise" onclick="toggleTask('exercise')">
+        <div class="task-left">
+          <span class="task-emoji">🏋️‍♀️</span>
+          <div>
+            <div class="task-name">Exercise Session</div>
+            <div class="task-pts">+3 points • 30 min minimum</div>
+            <div class="weekly-note">Weekly target: 3 sessions</div>
+          </div>
+        </div>
+        <div class="task-check" id="check-exercise"></div>
+      </div>
+
+      <div class="task-item" id="task-soul" onclick="toggleTask('soul')">
+        <div class="task-left">
+          <span class="task-emoji">❤️</span>
+          <div>
+            <div class="task-name">Something for the Soul</div>
+            <div class="task-pts">+2 points • Read, meditate, podcast...</div>
+            <div class="weekly-note">Weekly target: 3 times</div>
+          </div>
+        </div>
+        <div class="task-check" id="check-soul"></div>
+      </div>
+
+      <!-- Upload -->
+      <div class="section-title" style="margin-top:20px;">Upload <span>MFP Proof</span></div>
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">📸</div>
+        <p id="uploadText">Tap to upload your MyFitnessPal screenshot</p>
+        <img id="previewImg" class="preview-img" style="display:none;" />
+      </div>
+      <input type="file" id="fileInput" accept="image/*" onchange="handleUpload(event)" />
+
+      <button class="btn btn-primary" onclick="saveLog()" style="margin-top:8px;">SAVE TODAY'S LOG ✅</button>
+      <button class="btn btn-outline" onclick="openBackdate(false)" style="margin-top:0;">📅 LOG A MISSED DAY</button>
+      <button class="btn btn-outline" onclick="goToScreen('loginScreen')" style="margin-top:0;">← Switch Member</button>
+    </div>
+
+    <!-- LEADERBOARD TAB -->
+    <div id="tab-leaderboard" class="tab-content" style="display:none;">
+      <div style="padding-top:20px;">
+        <div class="section-title">🏆 <span>Leaderboard</span></div>
+        <div class="card" style="text-align:center;padding:10px 16px;margin-bottom:16px;">
+          <span style="font-size:12px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;font-weight:700;">8-Week Round</span>
+        </div>
+        <div id="leaderboardList"></div>
+      </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div id="tab-history" class="tab-content" style="display:none;">
+      <div style="padding-top:20px;">
+        <div class="section-title">📋 My <span>History</span></div>
+        <div id="historyList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home', this)">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </div>
+    <div class="nav-item" onclick="switchTab('leaderboard', this)">
+      <div class="nav-icon">🏆</div>
+      <div class="nav-label">Board</div>
+    </div>
+    <div class="nav-item" onclick="switchTab('history', this)">
+      <div class="nav-icon">📋</div>
+      <div class="nav-label">History</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="screen">
+  <div class="pb-nav">
+    <div id="admin-tab-overview" class="admin-tab active">
+      <div class="logo-area" style="padding-top:20px;padding-bottom:10px;">
+        <div class="logo-title" style="font-size:32px;">Admin <span style="color:var(--yellow)">Panel</span></div>
+        <div class="logo-sub">Fat Blasters HQ 🔐</div>
+      </div>
+
+      <div class="admin-stats" id="adminStats"></div>
+
+      <div class="section-title">👥 <span>Members</span></div>
+      <div id="adminMemberList"></div>
+
+      <div class="divider"></div>
+      <button class="btn btn-primary" onclick="openBackdate(true)">📅 LOG ENTRY FOR A MEMBER</button>
+      <button class="btn btn-yellow" onclick="openBonusPoints()">⭐ AWARD BONUS POINTS</button>
+      <button class="btn btn-red" onclick="confirmReset()">🔄 Reset Round (New 8 Weeks)</button>
+      <button class="btn btn-outline" onclick="goToScreen('loginScreen')" style="margin-top:4px;">← Back to Login</button>
+    </div>
+
+    <div id="admin-tab-leaderboard" class="admin-tab" style="display:none;">
+      <div style="padding-top:20px;">
+        <div class="section-title">🏆 Full <span>Leaderboard</span></div>
+        <div id="adminLeaderboard"></div>
+      </div>
+    </div>
+
+    <div id="admin-tab-members" class="admin-tab" style="display:none;">
+      <div style="padding-top:20px;">
+        <div class="section-title">👥 Manage <span>Members</span></div>
+        <div class="card" style="padding:14px;margin-bottom:12px;">
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:10px;">Add or remove members here. Use this at the start of each new round to update your group!</p>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="newMemberInput" placeholder="Enter new member name..." style="margin-bottom:0;flex:1;" />
+            <button class="btn btn-primary" onclick="addMember()" style="width:auto;padding:14px 18px;margin-bottom:0;font-size:16px;">+ ADD</button>
+          </div>
+        </div>
+        <div id="manageMemberList"></div>
+      </div>
+    </div>
+
+    <div id="admin-tab-daily" class="admin-tab" style="display:none;">
+      <div style="padding-top:20px;">
+        <div class="section-title">📸 Daily <span>Update Image</span></div>
+        <div class="card" style="padding:14px;margin-bottom:12px;">
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:10px;">Pick the day you want to generate — then long press the image to save and share on WhatsApp! 📲</p>
+          <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Select Day</label>
+          <input type="date" id="dailyDatePicker" style="margin-bottom:12px;" />
+          <button class="btn btn-yellow" onclick="generateDailyImage()" style="margin-bottom:0;">📸 GENERATE DAILY UPDATE</button>
+        </div>
+        <div id="dailyImageWrap" style="display:none;margin-top:16px;">
+          <p style="font-size:13px;color:var(--teal);font-weight:700;margin-bottom:8px;">👇 Long press image to save & share!</p>
+          <img id="dailyImage" style="width:100%;border-radius:12px;border:2px solid var(--teal);" />
+          <a id="dailyDownload" download="fatblasters-daily.png" style="display:none;"></a>
+        </div>
+      </div>
+    </div>
+
+    <div id="admin-tab-table" class="admin-tab" style="display:none;">
+      <div style="padding-top:20px;">
+        <div class="section-title">📊 Weekly <span>Points Table</span></div>
+        <div class="card" style="padding:12px;margin-bottom:12px;">
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:10px;">Tap below to generate a picture of the table — then <strong style="color:var(--yellow);">long press the image</strong> to save and share on WhatsApp! 📲</p>
+          <button class="btn btn-yellow" onclick="generateTableImage()" style="margin-bottom:0;">📸 GENERATE TABLE IMAGE</button>
+        </div>
+        <div id="weeklyTableWrap" style="overflow-x:auto;"></div>
+        <div id="tableImageWrap" style="display:none;margin-top:16px;">
+          <p style="font-size:13px;color:var(--teal);font-weight:700;margin-bottom:8px;">👇 Long press image to save & share!</p>
+          <img id="tableImage" style="width:100%;border-radius:12px;border:2px solid var(--teal);" />
+          <a id="tableDownload" download="fatblasters-table.png" style="display:none;"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchAdminTab('overview', this)">
+      <div class="nav-icon">📊</div>
+      <div class="nav-label">Overview</div>
+    </div>
+    <div class="nav-item" onclick="switchAdminTab('leaderboard', this)">
+      <div class="nav-icon">🏆</div>
+      <div class="nav-label">Leaderboard</div>
+    </div>
+    <div class="nav-item" onclick="switchAdminTab('members', this)">
+      <div class="nav-icon">👥</div>
+      <div class="nav-label">Members</div>
+    </div>
+    <div class="nav-item" onclick="switchAdminTab('daily', this)">
+      <div class="nav-icon">📸</div>
+      <div class="nav-label">Daily</div>
+    </div>
+    <div class="nav-item" onclick="switchAdminTab('table', this)">
+      <div class="nav-icon">📋</div>
+      <div class="nav-label">Table</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bonus Points Modal -->
+<div class="modal-overlay" id="bonusModal" style="align-items:flex-end;padding:0;">
+  <div style="background:#131336;width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:24px;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-family:'Bebas Neue';font-size:24px;letter-spacing:2px;color:var(--yellow);">⭐ Award Bonus Points</div>
+      <div onclick="closeBonusPoints()" style="font-size:24px;cursor:pointer;color:rgba(255,255,255,0.5);">✕</div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Member</label>
+      <select id="bonusMemberSelect" style="margin-bottom:0;">
+        <option value="">-- Select member --</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Bonus Points</label>
+      <input type="number" id="bonusPoints" value="10" min="1" max="100" style="margin-bottom:0;" />
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Reason (optional)</label>
+      <input type="text" id="bonusReason" placeholder="e.g. Step Challenge Week 3" style="margin-bottom:0;" />
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="checkbox" id="bonusAllMembers" onchange="toggleBonusAll()" style="width:20px;height:20px;cursor:pointer;" />
+        <span style="font-size:14px;font-weight:700;color:var(--white);">Award to ALL members at once</span>
+      </label>
+    </div>
+
+    <button class="btn btn-yellow" onclick="saveBonusPoints()">⭐ AWARD POINTS</button>
+  </div>
+</div>
+
+<!-- Back-Date Entry Modal -->
+<div class="modal-overlay" id="backdateModal" style="align-items:flex-end;padding:0;">
+  <div style="background:#131336;width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:24px;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-family:'Bebas Neue';font-size:24px;letter-spacing:2px;" id="backdateTitle">Log a Missed Day</div>
+      <div onclick="closeBackdate()" style="font-size:24px;cursor:pointer;color:rgba(255,255,255,0.5);">✕</div>
+    </div>
+
+    <div id="backdateMemberRow" style="display:none;margin-bottom:12px;">
+      <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;">Member</label>
+      <select id="backdateMemberSelect" style="margin-top:6px;margin-bottom:0;">
+        <option value="">-- Select member --</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;">Date</label>
+      <input type="date" id="backdateDate" style="margin-top:6px;margin-bottom:0;" />
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:10px;">Tasks Completed</label>
+      <div class="task-item" id="bd-task-calories" onclick="toggleBdTask('calories')" style="margin-bottom:8px;">
+        <div class="task-left"><span class="task-emoji">🔥</span><div><div class="task-name">Calorie Deficit</div><div class="task-pts">+5 pts</div></div></div>
+        <div class="task-check" id="bd-check-calories"></div>
+      </div>
+      <div class="task-item" id="bd-task-water" onclick="toggleBdTask('water')" style="margin-bottom:8px;">
+        <div class="task-left"><span class="task-emoji">💧</span><div><div class="task-name">Water Intake</div><div class="task-pts">+1 pt</div></div></div>
+        <div class="task-check" id="bd-check-water"></div>
+      </div>
+      <div class="task-item" id="bd-task-exercise" onclick="toggleBdTask('exercise')" style="margin-bottom:8px;">
+        <div class="task-left"><span class="task-emoji">🏋️‍♀️</span><div><div class="task-name">Exercise Session</div><div class="task-pts">+3 pts</div></div></div>
+        <div class="task-check" id="bd-check-exercise"></div>
+      </div>
+      <div class="task-item" id="bd-task-soul" onclick="toggleBdTask('soul')" style="margin-bottom:8px;">
+        <div class="task-left"><span class="task-emoji">❤️</span><div><div class="task-name">Something for the Soul</div><div class="task-pts">+2 pts</div></div></div>
+        <div class="task-check" id="bd-check-soul"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">MFP Screenshot (optional for back-dates)</label>
+      <div class="upload-area" id="bdUploadArea" onclick="document.getElementById('bdFileInput').click()" style="padding:16px;">
+        <div class="upload-icon" style="font-size:24px;">📸</div>
+        <p id="bdUploadText">Tap to upload screenshot</p>
+      </div>
+      <input type="file" id="bdFileInput" accept="image/*" onchange="handleBdUpload(event)" style="display:none;" />
+    </div>
+
+    <button class="btn btn-primary" onclick="saveBackdate()">SAVE ENTRY ✅</button>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div class="modal-overlay" id="imgModal" onclick="closeModal()">
+  <div class="modal-close">✕</div>
+  <img class="modal-img" id="modalImg" src="" />
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_PASS = 'FatBlasters2026!';
+const DEFAULT_MEMBERS = ['Chloe','Shirley','Elaine','Sinead','Mary','Sandra','Tara','Laura','Anne','Shauna','Lisa','Paula G','Rachel Curley','Jacqueline'];
+const POINTS = { calories: 5, water: 1, exercise: 3, soul: 2 };
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+let currentMember = null;
+let taskState = { calories: false, water: false, exercise: false, soul: false };
+let uploadedImage = null;
+
+// ---- SUPABASE DATABASE ----
+const SUPABASE_URL = 'https://dfvbowgqxjbqcanuqyxt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmdmJvd2dxeGpicWNhbnVxeXh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTQyMzAsImV4cCI6MjA5NTgzMDIzMH0.PT_IiL34Al2AISEYURk1r3HTS42E4IzEtvZ7YJPKux4';
+const API = `${SUPABASE_URL}/rest/v1`;
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`,
+  'Prefer': 'return=representation'
+};
+
+async function sbFetch(path, options = {}) {
+  const res = await fetch(`${API}${path}`, { headers: HEADERS, ...options });
+  if (!res.ok) { const e = await res.text(); throw new Error(e); }
+  const text = await res.text();
+  return text ? JSON.parse(text) : [];
+}
+
+// Get all members from DB
+async function getMembers() {
+  try {
+    const rows = await sbFetch('/members?order=name');
+    if (rows.length === 0) {
+      // Seed default members on first run
+      for (const name of DEFAULT_MEMBERS) {
+        await sbFetch('/members', { method: 'POST', body: JSON.stringify({ name, total_points: 0 }) });
+      }
+      return DEFAULT_MEMBERS;
+    }
+    return rows.map(r => r.name);
+  } catch(e) { console.error(e); return DEFAULT_MEMBERS; }
+}
+
+async function addMemberDB(name) {
+  await sbFetch('/members', { method: 'POST', body: JSON.stringify({ name, total_points: 0 }) });
+}
+
+async function removeMemberDB(name) {
+  await sbFetch(`/members?name=eq.${encodeURIComponent(name)}`, { method: 'DELETE' });
+}
+
+async function updateMemberPoints(name, points) {
+  await sbFetch(`/members?name=eq.${encodeURIComponent(name)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ total_points: points })
+  });
+}
+
+async function getMemberPoints(name) {
+  const rows = await sbFetch(`/members?name=eq.${encodeURIComponent(name)}&select=total_points`);
+  return rows.length ? rows[0].total_points : 0;
+}
+
+async function getAllMemberPoints() {
+  return await sbFetch('/members?select=name,total_points&order=total_points.desc');
+}
+
+async function saveLogToDB(memberName, dateStr, tasks, points, proofImage, backdated = false) {
+  const existing = await sbFetch(`/logs?member_name=eq.${encodeURIComponent(memberName)}&log_date=eq.${dateStr}&select=id,points`);
+  const oldPts = existing.length ? existing[0].points : 0;
+
+  if (existing.length) {
+    await sbFetch(`/logs?member_name=eq.${encodeURIComponent(memberName)}&log_date=eq.${dateStr}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ calories: tasks.calories, water: tasks.water, exercise: tasks.exercise, soul: tasks.soul, points, proof_image: proofImage || null, backdated })
+    });
+  } else {
+    await sbFetch('/logs', {
+      method: 'POST',
+      body: JSON.stringify({ member_name: memberName, log_date: dateStr, calories: tasks.calories, water: tasks.water, exercise: tasks.exercise, soul: tasks.soul, points, proof_image: proofImage || null, backdated })
+    });
+  }
+
+  // Update total points
+  const currentPts = await getMemberPoints(memberName);
+  const newTotal = Math.max(0, currentPts - oldPts + points);
+  await updateMemberPoints(memberName, newTotal);
+  return newTotal;
+}
+
+async function getMemberLogs(memberName) {
+  return await sbFetch(`/logs?member_name=eq.${encodeURIComponent(memberName)}&order=log_date.desc`);
+}
+
+async function getAllLogs() {
+  return await sbFetch('/logs?order=log_date.desc');
+}
+
+async function getWeeklyExerciseCountDB(memberName, forDate) {
+  const weekStart = getWeekStart(forDate);
+  const d = new Date(weekStart + 'T00:00:00');
+  d.setDate(d.getDate() + 6);
+  const weekEnd = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const rows = await sbFetch(`/logs?member_name=eq.${encodeURIComponent(memberName)}&log_date=gte.${weekStart}&log_date=lte.${weekEnd}&exercise=eq.true&log_date=neq.${forDate}&select=id`);
+  return rows.length;
+}
+
+function getTodayKey() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
+
+async function populateMemberDropdown() {
+  const sel = document.getElementById('memberSelect');
+  sel.innerHTML = '<option value="">-- Choose your name --</option>';
+  const members = await getMembers();
+  members.sort().forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    sel.appendChild(opt);
+  });
+}
+
+// ---- MEMBER MANAGEMENT ----
+async function addMember() {
+  const input = document.getElementById('newMemberInput');
+  const name = input.value.trim();
+  if (!name) { showToast('Please enter a name!'); return; }
+  try {
+    await addMemberDB(name);
+    input.value = '';
+    await populateMemberDropdown();
+    await buildManageMembers();
+    showToast('✅ ' + name + ' added!');
+  } catch(e) { showToast('Error adding member!'); }
+}
+
+async function removeMember(name) {
+  if (!confirm(`Remove ${name} from the group?`)) return;
+  try {
+    await removeMemberDB(name);
+    await populateMemberDropdown();
+    await buildManageMembers();
+    await loadAdminPanel();
+    showToast('🗑️ ' + name + ' removed');
+  } catch(e) { showToast('Error removing member!'); }
+}
+
+async function buildManageMembers() {
+  const el = document.getElementById('manageMemberList');
+  el.innerHTML = '<div class="text-muted text-center">Loading...</div>';
+  const members = await getMembers();
+  el.innerHTML = '';
+  members.sort().forEach((name, i) => {
+    const div = document.createElement('div');
+    div.className = 'admin-member';
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.justifyContent = 'space-between';
+    div.innerHTML = `
+      <div style="font-weight:800;font-size:15px;">${i+1}. ${name}</div>
+      <button onclick="removeMember('${name}')" style="background:rgba(232,25,44,0.2);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;">Remove</button>
+    `;
+    el.appendChild(div);
+  });
+  if (members.length === 0) {
+    el.innerHTML = '<div class="card text-center text-muted">No members yet. Add some above!</div>';
+  }
+}
+
+// ---- LOGIN ----
+function memberLogin() {
+  const sel = document.getElementById('memberSelect').value;
+  if (!sel) { showToast('Please select your name!'); return; }
+  currentMember = sel;
+  loadMemberApp();
+  goToScreen('memberApp');
+}
+
+function adminLogin() {
+  const pass = document.getElementById('adminPass').value;
+  if (pass === ADMIN_PASS) {
+    loadAdminPanel();
+    goToScreen('adminPanel');
+  } else {
+    showToast('Wrong password!');
+  }
+}
+
+function getWeekStart(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getWeeklyExerciseCount(memberName, forDate) {
+  // Sync fallback using cached logs
+  if (!window._cachedLogs) return 0;
+  const weekStart = getWeekStart(forDate);
+  const d2 = new Date(weekStart + 'T00:00:00');
+  d2.setDate(d2.getDate() + 6);
+  const weekEnd = `${d2.getFullYear()}-${String(d2.getMonth()+1).padStart(2,'0')}-${String(d2.getDate()).padStart(2,'0')}`;
+  return window._cachedLogs.filter(l => l.member_name === memberName && l.log_date >= weekStart && l.log_date <= weekEnd && l.exercise && l.log_date !== forDate).length;
+}
+
+// ---- MEMBER APP ----
+async function loadMemberApp() {
+  taskState = { calories: false, water: false, exercise: false, soul: false };
+  uploadedImage = null;
+  document.getElementById('previewImg').style.display = 'none';
+  document.getElementById('uploadText').textContent = 'Tap to upload your MyFitnessPal screenshot';
+  document.getElementById('uploadArea').classList.remove('has-file');
+
+  // Load today's log if exists
+  const logs = await getMemberLogs(currentMember);
+  window._cachedLogs = logs;
+  const todayLog = logs.find(l => l.log_date === getTodayKey());
+  if (todayLog) {
+    taskState = { calories: todayLog.calories, water: todayLog.water, exercise: todayLog.exercise, soul: todayLog.soul };
+    if (todayLog.proof_image) {
+      uploadedImage = todayLog.proof_image;
+      document.getElementById('previewImg').src = uploadedImage;
+      document.getElementById('previewImg').style.display = 'block';
+      document.getElementById('uploadText').textContent = '✅ Screenshot uploaded!';
+      document.getElementById('uploadArea').classList.add('has-file');
+    }
+  }
+
+  // Get total points
+  const totalPts = await getMemberPoints(currentMember);
+  window._cachedTotalPts = totalPts;
+
+  updateTaskUI();
+  updatePointsDisplay();
+  buildStreakRow(logs);
+}
+
+function toggleTask(task) {
+  if (task === 'exercise' && !taskState.exercise) {
+    const count = getWeeklyExerciseCount(currentMember, getTodayKey());
+    if (count >= 3) {
+      showToast('Max 3 exercise sessions per week reached! 🏋️‍♀️');
+      return;
+    }
+  }
+  taskState[task] = !taskState[task];
+  updateTaskUI();
+  updatePointsDisplay();
+}
+
+function updateTaskUI() {
+  ['calories','water','exercise','soul'].forEach(t => {
+    const item = document.getElementById('task-' + t);
+    const check = document.getElementById('check-' + t);
+    if (taskState[t]) {
+      item.classList.add('checked');
+      check.textContent = '✓';
+    } else {
+      item.classList.remove('checked');
+      check.textContent = '';
+    }
+  });
+  const exCount = getWeeklyExerciseCount(currentMember, getTodayKey()) + (taskState.exercise ? 1 : 0);
+  const exPtsEl = document.querySelector('#task-exercise .task-pts');
+  if (exPtsEl) {
+    const remaining = Math.max(0, 3 - exCount);
+    exPtsEl.textContent = `+3 points • 30 min minimum • ${exCount}/3 this week${exCount >= 3 ? ' ✅ Max reached' : ` (${remaining} left)`}`;
+  }
+}
+
+function calcTodayPoints() {
+  return Object.keys(taskState).reduce((sum, k) => sum + (taskState[k] ? POINTS[k] : 0), 0);
+}
+
+function updatePointsDisplay() {
+  document.getElementById('todayPts').textContent = calcTodayPoints();
+  const total = window._cachedTotalPts || 0;
+  document.getElementById('totalPtsDisplay').innerHTML = total + ' <span style="font-size:16px;color:var(--teal);">TOTAL PTS</span>';
+}
+
+function buildStreakRow(logs) {
+  const row = document.getElementById('streakRow');
+  const today = new Date();
+  row.innerHTML = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const logged = logs && logs.find(l => l.log_date === key);
+    const isToday = i === 0;
+    const div = document.createElement('div');
+    div.className = 'streak-day' + (logged ? ' done' : '') + (isToday && !logged ? ' today' : '');
+    div.textContent = DAYS[d.getDay() === 0 ? 6 : d.getDay() - 1];
+    row.appendChild(div);
+  }
+}
+
+// ---- IMAGE COMPRESSION ----
+function compressImage(file, maxWidth, maxHeight, quality) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        // Scale down if too large
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  showToast('Compressing image... ⏳');
+  compressImage(file, 800, 1200, 0.6).then(compressed => {
+    uploadedImage = compressed;
+    document.getElementById('previewImg').src = compressed;
+    document.getElementById('previewImg').style.display = 'block';
+    document.getElementById('uploadText').textContent = '✅ Screenshot uploaded!';
+    document.getElementById('uploadArea').classList.add('has-file');
+    taskState.calories = true;
+    updateTaskUI();
+    updatePointsDisplay();
+    showToast('📸 Screenshot ready!');
+  });
+}
+
+async function saveLog() {
+  if (taskState.calories && !uploadedImage) {
+    showToast('Please upload your MFP screenshot! 📸');
+    return;
+  }
+  const pts = calcTodayPoints();
+  showToast('Saving... ⏳');
+  try {
+    const newTotal = await saveLogToDB(currentMember, getTodayKey(), taskState, pts, uploadedImage);
+    window._cachedTotalPts = newTotal;
+    const logs = await getMemberLogs(currentMember);
+    window._cachedLogs = logs;
+    updatePointsDisplay();
+    buildStreakRow(logs);
+    showToast('🎉 Saved! +' + pts + ' points today!');
+  } catch(e) { showToast('Error saving! Try again.'); console.error(e); }
+}
+
+// ---- LEADERBOARD ----
+async function buildLeaderboard(containerId) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '<div class="text-muted text-center" style="padding:20px;">Loading... 🐢</div>';
+  const scores = await getAllMemberPoints();
+  el.innerHTML = '';
+  scores.forEach((m, i) => {
+    const medals = ['🥇','🥈','🥉'];
+    const isMe = m.name === currentMember;
+    const div = document.createElement('div');
+    div.className = 'lb-item rank-' + (i+1) + (isMe ? ' me' : '');
+    div.innerHTML = `
+      <div class="lb-rank">${medals[i] || (i+1)}</div>
+      <div class="lb-name">${m.name}${isMe ? ' <span class="tag tag-green">YOU</span>' : ''}</div>
+      <div style="text-align:right;">
+        <div class="lb-pts">${m.total_points}</div>
+        <div class="lb-pts-label">pts</div>
+      </div>
+    `;
+    el.appendChild(div);
+  });
+}
+
+// ---- HISTORY ----
+async function buildHistory() {
+  const el = document.getElementById('historyList');
+  el.innerHTML = '<div class="text-muted text-center" style="padding:20px;">Loading... 🐢</div>';
+  const logs = await getMemberLogs(currentMember);
+  el.innerHTML = '';
+  if (logs.length === 0) {
+    el.innerHTML = '<div class="card text-center text-muted">No logs yet. Start today! 💪</div>';
+    return;
+  }
+  logs.forEach(log => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    const taskIcons = [];
+    if (log.calories) taskIcons.push('🔥');
+    if (log.water) taskIcons.push('💧');
+    if (log.exercise) taskIcons.push('🏋️‍♀️');
+    if (log.soul) taskIcons.push('❤️');
+    const proofSafe = log.proof_image ? log.proof_image.replace(/'/g, "\\'") : null;
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-weight:800;">${formatDate(log.log_date)}${log.backdated ? ' <span class="tag tag-yellow">backdated</span>' : ''}</div>
+        <div style="font-family:'Bebas Neue';font-size:22px;color:var(--yellow);">${log.points} pts</div>
+      </div>
+      <div style="font-size:20px;">${taskIcons.join(' ') || '—'}</div>
+      ${proofSafe ? `<img src="${proofSafe}" style="width:100%;border-radius:8px;margin-top:10px;max-height:120px;object-fit:cover;" onclick="openModal('${proofSafe}')" />` : ''}
+    `;
+    el.appendChild(div);
+  });
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-IE', { weekday:'short', day:'numeric', month:'short' });
+}
+
+// ---- TABS ----
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('#memberApp .nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  el.classList.add('active');
+
+  if (name === 'leaderboard') buildLeaderboard('leaderboardList');
+  if (name === 'history') buildHistory();
+}
+
+function switchAdminTab(name, el) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('#adminPanel .nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('admin-tab-' + name).style.display = 'block';
+  el.classList.add('active');
+  if (name === 'leaderboard') buildLeaderboard('adminLeaderboard');
+  if (name === 'table') buildWeeklyTable();
+  if (name === 'members') buildManageMembers();
+  if (name === 'daily') {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    document.getElementById('dailyDatePicker').value = yesterday.toISOString().split('T')[0];
+    document.getElementById('dailyDatePicker').max = new Date().toISOString().split('T')[0];
+  }
+}
+
+// ---- ADMIN ----
+async function loadAdminPanel() {
+  document.getElementById('adminStats').innerHTML = '<div style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.5);padding:10px;">Loading... 🐢</div>';
+  document.getElementById('adminMemberList').innerHTML = '';
+
+  const todayKey = getTodayKey();
+  const [allMembers, allPts, todayLogs] = await Promise.all([
+    getMembers(),
+    getAllMemberPoints(),
+    sbFetch(`/logs?log_date=eq.${todayKey}`)
+  ]);
+
+  const totalLogs = await sbFetch('/logs?select=id');
+  const loggedToday = todayLogs.length;
+  const notLogged = allMembers.length - loggedToday;
+
+  document.getElementById('adminStats').innerHTML = `
+    <div class="stat-box"><div class="stat-num">${loggedToday}</div><div class="stat-lbl">Logged Today</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--red);">${notLogged}</div><div class="stat-lbl">Not Logged</div></div>
+    <div class="stat-box"><div class="stat-num">${totalLogs.length}</div><div class="stat-lbl">Total Logs</div></div>
+    <div class="stat-box"><div class="stat-num">${allMembers.length}</div><div class="stat-lbl">Members</div></div>
+  `;
+
+  const el = document.getElementById('adminMemberList');
+  el.innerHTML = '';
+  const sortedMembers = allPts.sort((a,b) => b.total_points - a.total_points);
+
+  sortedMembers.forEach(member => {
+    const todayLog = todayLogs.find(l => l.member_name === member.name);
+    const div = document.createElement('div');
+    div.className = 'admin-member';
+    const taskIcons = todayLog ? [
+      todayLog.calories ? '🔥' : '',
+      todayLog.water ? '💧' : '',
+      todayLog.exercise ? '🏋️‍♀️' : '',
+      todayLog.soul ? '❤️' : '',
+    ].filter(Boolean).join(' ') : '—';
+    const proofSafe = todayLog && todayLog.proof_image ? todayLog.proof_image.replace(/'/g, "\\'") : null;
+    div.innerHTML = `
+      <div class="admin-member-header">
+        <div class="admin-member-name">${member.name}</div>
+        <div class="admin-member-pts">${member.total_points} pts</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="tag ${todayLog ? 'tag-green' : 'tag-red'}">${todayLog ? '✅ Logged' : '⏳ Pending'}</span>
+        <span style="font-size:16px;">${taskIcons}</span>
+      </div>
+      ${proofSafe ? `
+        <div class="proof-row">
+          <img class="proof-thumb" src="${proofSafe}" onclick="openModal('${proofSafe}')" title="MFP Proof" />
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);align-self:center;">MFP Screenshot<br/><span style="color:var(--green);">✅ Proof uploaded</span></div>
+        </div>
+      ` : todayLog ? '<div class="admin-proof">No MFP screenshot uploaded</div>' : ''}
+    `;
+    el.appendChild(div);
+  });
+}
+
+function getWeekNumber(dateStr, roundStart) {
+  const start = new Date(roundStart + 'T00:00:00');
+  const d = new Date(dateStr + 'T00:00:00');
+  const diff = Math.floor((d - start) / (7 * 24 * 60 * 60 * 1000));
+  return Math.min(Math.max(diff + 1, 1), 8);
+}
+
+function getMonday(d) {
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const mon = new Date(d.setDate(diff));
+  return `${mon.getFullYear()}-${String(mon.getMonth()+1).padStart(2,'0')}-${String(mon.getDate()).padStart(2,'0')}`;
+}
+
+async function buildWeeklyTable() {
+  const wrap = document.getElementById('weeklyTableWrap');
+  wrap.innerHTML = '<div class="text-muted text-center" style="padding:20px;">Loading... 🐢</div>';
+  const roundStart = localStorage.getItem('fb_roundStart') || getMonday(new Date());
+  const [members, allPts, allLogs] = await Promise.all([getMembers(), getAllMemberPoints(), getAllLogs()]);
+
+  const weeklyData = members.map(name => {
+    const weeks = [0,0,0,0,0,0,0,0];
+    allLogs.filter(l => l.member_name === name).forEach(log => {
+      const wk = getWeekNumber(log.log_date, roundStart);
+      if (wk >= 1 && wk <= 8) weeks[wk-1] += log.points;
+    });
+    const pts = allPts.find(p => p.name === name);
+    const total = pts ? pts.total_points : 0;
+    return { name, weeks, total };
+  }).sort((a,b) => b.total - a.total);
+
+  let html = `<table class="weekly-table"><thead><tr>
+    <th>Group ${members.length}</th>
+    <th>Wk1</th><th>Wk2</th><th>Wk3</th><th>Wk4</th>
+    <th>Wk5</th><th>Wk6</th><th>Wk7</th><th>Wk8</th>
+    <th style="color:var(--teal);">Total</th>
+  </tr></thead><tbody>`;
+  weeklyData.forEach((m, i) => {
+    const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
+    const medals = ['🥇','🥈','🥉'];
+    html += `<tr class="${rankClass}">
+      <td>${medals[i] || ''} ${m.name}</td>
+      ${m.weeks.map(w => `<td>${w || '—'}</td>`).join('')}
+      <td class="total-col">${m.total}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+  return weeklyData;
+}
+
+async function generateTableImage() {
+  showToast('Generating image... ⏳');
+  const weeklyData = await buildWeeklyTable();
+
+  const canvas = document.createElement('canvas');
+  const colWidths = [160, 55, 55, 55, 55, 55, 55, 55, 55, 75];
+  const totalWidth = colWidths.reduce((a,b) => a+b, 0) + 40;
+  const rowHeight = 44;
+  const headerHeight = 56;
+  const titleHeight = 70;
+  const footerHeight = 50;
+  const totalHeight = titleHeight + headerHeight + (weeklyData.length * rowHeight) + footerHeight;
+
+  canvas.width = totalWidth;
+  canvas.height = totalHeight;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#0D0D2B';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+  grad.addColorStop(0, 'rgba(42,191,170,0.18)');
+  grad.addColorStop(1, 'rgba(61,190,90,0.10)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#1a6e5a';
+  ctx.fillRect(0, 0, canvas.width, titleHeight);
+  ctx.font = 'bold 28px serif';
+  ctx.fillText('🐢', 18, 44);
+  ctx.font = 'bold 28px Arial';
+  ctx.fillStyle = '#FFD700';
+  ctx.fillText('FAT BLASTERS', 60, 38);
+  ctx.font = '14px Arial';
+  ctx.fillStyle = '#2ABFAA';
+  ctx.fillText('Points Table', 62, 58);
+  const now = new Date();
+  ctx.font = '12px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.textAlign = 'right';
+  ctx.fillText(now.toLocaleDateString('en-IE', {day:'numeric',month:'short',year:'numeric'}), canvas.width - 20, 44);
+  ctx.textAlign = 'left';
+
+  const headers = ['Name','Wk1','Wk2','Wk3','Wk4','Wk5','Wk6','Wk7','Wk8','Total'];
+  ctx.fillStyle = '#1a6e5a';
+  ctx.fillRect(0, titleHeight, canvas.width, headerHeight);
+  let x = 20;
+  headers.forEach((h, i) => {
+    ctx.font = 'bold 15px Arial';
+    ctx.fillStyle = i === headers.length - 1 ? '#2ABFAA' : '#FFD700';
+    ctx.textAlign = i === 0 ? 'left' : 'center';
+    ctx.fillText(h, i === 0 ? x : x + colWidths[i]/2, titleHeight + 34);
+    x += colWidths[i];
+  });
+
+  const medals = ['🥇','🥈','🥉'];
+  weeklyData.forEach((m, rowIdx) => {
+    const y = titleHeight + headerHeight + rowIdx * rowHeight;
+    ctx.fillStyle = rowIdx % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.15)';
+    ctx.fillRect(0, y, canvas.width, rowHeight);
+    if (rowIdx === 0) { ctx.fillStyle = 'rgba(255,215,0,0.1)'; ctx.fillRect(0, y, canvas.width, rowHeight); }
+    if (rowIdx === 1) { ctx.fillStyle = 'rgba(192,192,192,0.08)'; ctx.fillRect(0, y, canvas.width, rowHeight); }
+    if (rowIdx === 2) { ctx.fillStyle = 'rgba(205,127,50,0.08)'; ctx.fillRect(0, y, canvas.width, rowHeight); }
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, y + rowHeight); ctx.lineTo(canvas.width, y + rowHeight); ctx.stroke();
+    let cx = 20;
+    ctx.font = 'bold 14px Arial';
+    const nameColor = rowIdx === 0 ? '#FFD700' : rowIdx === 1 ? '#C0C0C0' : rowIdx === 2 ? '#CD7F32' : '#FFFFFF';
+    ctx.fillStyle = nameColor;
+    ctx.textAlign = 'left';
+    ctx.fillText((medals[rowIdx] || (rowIdx+1) + '.') + ' ' + m.name, cx, y + rowHeight/2 + 5);
+    cx += colWidths[0];
+    m.weeks.forEach((w, wi) => {
+      ctx.font = '13px Arial';
+      ctx.fillStyle = w > 0 ? '#FFFFFF' : 'rgba(255,255,255,0.25)';
+      ctx.textAlign = 'center';
+      ctx.fillText(w > 0 ? w : '—', cx + colWidths[wi+1]/2, y + rowHeight/2 + 5);
+      cx += colWidths[wi+1];
+    });
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = '#FFD700';
+    ctx.textAlign = 'center';
+    ctx.fillText(m.total, cx + colWidths[9]/2, y + rowHeight/2 + 5);
+  });
+
+  const fy = titleHeight + headerHeight + weeklyData.length * rowHeight;
+  ctx.fillStyle = '#1a6e5a';
+  ctx.fillRect(0, fy, canvas.width, footerHeight);
+  ctx.font = '13px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.textAlign = 'center';
+  ctx.fillText('💪 Slow & Steady Wins the Race! 🐢', canvas.width/2, fy + 30);
+
+  const imgEl = document.getElementById('tableImage');
+  const wrapEl = document.getElementById('tableImageWrap');
+  imgEl.src = canvas.toDataURL('image/png');
+  wrapEl.style.display = 'block';
+  const dl = document.getElementById('tableDownload');
+  dl.href = canvas.toDataURL('image/png');
+  dl.click();
+  showToast('📸 Image ready — long press to share!');
+}
+
+async function generateDailyImage() {
+  const dateVal = document.getElementById('dailyDatePicker').value;
+  if (!dateVal) { showToast('Please pick a date!'); return; }
+  showToast('Generating... ⏳');
+
+  const [members, dayLogs] = await Promise.all([
+    getMembers(),
+    sbFetch(`/logs?log_date=eq.${dateVal}`)
+  ]);
+
+  const dateObj = new Date(dateVal + 'T00:00:00');
+  const dayName = dateObj.toLocaleDateString('en-IE', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  // Layout constants
+  const COLS = 4;
+  const ROWS = Math.ceil(members.length / COLS);
+  const colW = 140;
+  const rowH = 220;
+  const headerH = 100;
+  const footerH = 70;
+  const padding = 16;
+  const canvasW = COLS * colW + padding * 2;
+  const canvasH = headerH + ROWS * rowH + footerH;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = canvasW;
+  canvas.height = canvasH;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#0D0D2B';
+  ctx.fillRect(0, 0, canvasW, canvasH);
+  const bgGrad = ctx.createLinearGradient(0, 0, canvasW, canvasH);
+  bgGrad.addColorStop(0, 'rgba(42,191,170,0.12)');
+  bgGrad.addColorStop(1, 'rgba(61,190,90,0.08)');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, canvasW, canvasH);
+
+  // Header
+  ctx.fillStyle = '#1a6e5a';
+  ctx.fillRect(0, 0, canvasW, headerH);
+  ctx.font = 'bold 32px serif';
+  ctx.fillText('🐢', 14, 56);
+  ctx.font = 'bold 42px Arial';
+  ctx.fillStyle = '#FFD700';
+  ctx.fillText('FAT BLASTERS', 56, 52);
+  ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = '#2ABFAA';
+  ctx.fillText(dayName, 56, 80);
+
+  // Sort members: logged first, then by points desc
+  const sortedMembers = [...members].sort((a, b) => {
+    const la = dayLogs.find(l => l.member_name === a);
+    const lb = dayLogs.find(l => l.member_name === b);
+    if (la && !lb) return -1;
+    if (!la && lb) return 1;
+    return (lb ? lb.points : 0) - (la ? la.points : 0);
+  });
+
+  // Draw each member cell
+  sortedMembers.forEach((name, idx) => {
+    const col = idx % COLS;
+    const row = Math.floor(idx / COLS);
+    const x = padding + col * colW;
+    const y = headerH + row * rowH;
+    const log = dayLogs.find(l => l.member_name === name);
+
+    // Cell background
+    ctx.fillStyle = log ? 'rgba(42,191,170,0.1)' : 'rgba(255,255,255,0.03)';
+    ctx.strokeStyle = log ? 'rgba(42,191,170,0.4)' : 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, x + 4, y + 4, colW - 8, rowH - 8, 12);
+    ctx.fill();
+    ctx.stroke();
+
+    // Name bar - make it taller so name has room
+    ctx.fillStyle = log ? '#1a6e5a' : '#1a1a3a';
+    roundRectTop(ctx, x + 4, y + 4, colW - 8, 38, 12);
+    ctx.fill();
+
+    // Name text
+    ctx.font = 'bold 20px Arial';
+    ctx.fillStyle = log ? '#FFD700' : 'rgba(255,255,255,0.4)';
+    ctx.textAlign = 'center';
+    const shortName = name.length > 10 ? name.substring(0, 10) + '…' : name;
+    ctx.fillText(shortName, x + colW / 2, y + 30);
+
+    // Emojis — start well below the name bar (y + 52 = below 38px bar + padding)
+    const emojis = [
+      { key: 'calories', icon: '🍴' },
+      { key: 'exercise', icon: '🏋️' },
+      { key: 'water',    icon: '💧' },
+      { key: 'soul',     icon: '❤️' }
+    ];
+
+    emojis.forEach((e, ei) => {
+      const ex = x + (ei % 2) * (colW / 2) + colW / 4;
+      const ey = y + 80 + Math.floor(ei / 2) * 54;
+      if (log && log[e.key]) {
+        ctx.font = '26px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(e.icon, ex, ey);
+      } else {
+        // Empty circle placeholder
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(ex, ey - 8, 12, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    });
+
+    // Points badge
+    const pts = log ? log.points : 0;
+    ctx.fillStyle = log ? '#FFD700' : 'rgba(255,255,255,0.15)';
+    roundRect(ctx, x + colW/2 - 28, y + rowH - 44, 56, 28, 14);
+    ctx.fill();
+    ctx.font = 'bold 15px Arial';
+    ctx.fillStyle = log ? '#0D0D2B' : 'rgba(255,255,255,0.3)';
+    ctx.textAlign = 'center';
+    ctx.fillText(pts + ' pts', x + colW / 2, y + rowH - 24);
+  });
+
+  // Footer
+  ctx.fillStyle = '#1a6e5a';
+  ctx.fillRect(0, canvasH - footerH, canvasW, footerH);
+  ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.textAlign = 'center';
+  ctx.fillText('💪 Slow & Steady Wins the Race! 🐢', canvasW / 2, canvasH - 22);
+
+  // Show image
+  const imgEl = document.getElementById('dailyImage');
+  const wrap = document.getElementById('dailyImageWrap');
+  imgEl.src = canvas.toDataURL('image/png');
+  wrap.style.display = 'block';
+  const dl = document.getElementById('dailyDownload');
+  dl.href = canvas.toDataURL('image/png');
+  dl.click();
+  showToast('📸 Daily image ready — long press to share!');
+}
+
+async function confirmReset() {
+  if (confirm('Are you sure you want to reset ALL points for a new 8-week round? This cannot be undone!')) {
+    showToast('Resetting... ⏳');
+    try {
+      const members = await getMembers();
+      await sbFetch('/logs', { method: 'DELETE', headers: {...HEADERS, 'Prefer': 'return=minimal'} });
+      for (const name of members) {
+        await updateMemberPoints(name, 0);
+      }
+      localStorage.setItem('fb_roundStart', getMonday(new Date()));
+      await loadAdminPanel();
+      showToast('Round reset! New 8 weeks started 🚀');
+    } catch(e) { showToast('Error resetting!'); console.error(e); }
+  }
+}
+
+// Helper: rounded rectangle
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// Helper: rounded top only
+function roundRectTop(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h);
+  ctx.lineTo(x, y + h);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+async function confirmReset() {
+  if (confirm('Are you sure you want to reset ALL points for a new 8-week round? This cannot be undone!')) {
+    showToast('Resetting... ⏳');
+    try {
+      const members = await getMembers();
+      await sbFetch('/logs', { method: 'DELETE', headers: {...HEADERS, 'Prefer': 'return=minimal'} });
+      for (const name of members) {
+        await updateMemberPoints(name, 0);
+      }
+      localStorage.setItem('fb_roundStart', getMonday(new Date()));
+      await loadAdminPanel();
+      showToast('Round reset! New 8 weeks started 🚀');
+    } catch(e) { showToast('Error resetting!'); console.error(e); }
+  }
+}
+
+// ---- UTILS ----
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // Reset tabs
+  if (id === 'memberApp') {
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.getElementById('tab-home').style.display = 'block';
+    document.querySelectorAll('#memberApp .nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelector('#memberApp .nav-item').classList.add('active');
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function openModal(src) {
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('imgModal').classList.remove('open');
+}
+
+// ---- NOTIFICATIONS ----
+function requestNotifications() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function scheduleReminder() {
+  // Check every minute if it's 8pm
+  setInterval(() => {
+    const now = new Date();
+    if (now.getHours() === 20 && now.getMinutes() === 0) {
+      if (Notification.permission === 'granted') {
+        new Notification('🐢 Fat Blasters Reminder!', {
+          body: "Don't forget to log your daily results! 💪",
+          icon: '🐢'
+        });
+      }
+    }
+  }, 60000);
+}
+
+// ---- BONUS POINTS ----
+async function openBonusPoints() {
+  document.getElementById('bonusPoints').value = '10';
+  document.getElementById('bonusReason').value = '';
+  document.getElementById('bonusAllMembers').checked = false;
+  const sel = document.getElementById('bonusMemberSelect');
+  sel.innerHTML = '<option value="">-- Select member --</option>';
+  sel.style.display = 'block';
+  const members = await getMembers();
+  members.sort().forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    sel.appendChild(opt);
+  });
+  document.getElementById('bonusModal').classList.add('open');
+}
+
+function closeBonusPoints() {
+  document.getElementById('bonusModal').classList.remove('open');
+}
+
+function toggleBonusAll() {
+  const allChecked = document.getElementById('bonusAllMembers').checked;
+  const sel = document.getElementById('bonusMemberSelect');
+  sel.style.display = allChecked ? 'none' : 'block';
+  if (allChecked) sel.value = '';
+}
+
+async function saveBonusPoints() {
+  const pts = parseInt(document.getElementById('bonusPoints').value);
+  const reason = document.getElementById('bonusReason').value.trim() || 'Bonus Challenge';
+  const allMembers = document.getElementById('bonusAllMembers').checked;
+  const selectedMember = document.getElementById('bonusMemberSelect').value;
+
+  if (!pts || pts < 1) { showToast('Please enter a valid points amount!'); return; }
+  if (!allMembers && !selectedMember) { showToast('Please select a member!'); return; }
+
+  showToast('Awarding points... ⏳');
+
+  try {
+    const members = allMembers ? await getMembers() : [selectedMember];
+    for (const name of members) {
+      const current = await getMemberPoints(name);
+      await updateMemberPoints(name, current + pts);
+    }
+    closeBonusPoints();
+    await loadAdminPanel();
+    const msg = allMembers
+      ? `⭐ ${pts} bonus points awarded to all ${members.length} members!`
+      : `⭐ ${pts} bonus points awarded to ${selectedMember}!`;
+    showToast(msg);
+  } catch(e) {
+    showToast('Error awarding points!');
+    console.error(e);
+  }
+}
+
+// ---- BACK-DATE ENTRY ----
+let bdTaskState = { calories: false, water: false, exercise: false, soul: false };
+let bdUploadedImage = null;
+let bdIsAdmin = false;
+
+async function openBackdate(isAdmin) {
+  bdIsAdmin = isAdmin;
+  bdTaskState = { calories: false, water: false, exercise: false, soul: false };
+  bdUploadedImage = null;
+  document.getElementById('bdUploadText').textContent = 'Tap to upload screenshot';
+  document.getElementById('bdUploadArea').classList.remove('has-file');
+  document.getElementById('bdFileInput').value = '';
+
+  // Set default date to yesterday
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  document.getElementById('backdateDate').value = yesterday.toISOString().split('T')[0];
+  document.getElementById('backdateDate').max = new Date().toISOString().split('T')[0];
+
+  // Admin mode: show member selector
+  const memberRow = document.getElementById('backdateMemberRow');
+  if (isAdmin) {
+    memberRow.style.display = 'block';
+    document.getElementById('backdateTitle').textContent = 'Log Entry for Member';
+    const sel = document.getElementById('backdateMemberSelect');
+    sel.innerHTML = '<option value="">-- Select member --</option>';
+    const members = await getMembers();
+    members.sort().forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name; opt.textContent = name;
+      sel.appendChild(opt);
+    });
+  } else {
+    memberRow.style.display = 'none';
+    document.getElementById('backdateTitle').textContent = '📅 Log a Missed Day';
+  }
+
+  // Reset task UI
+  ['calories','water','exercise','soul'].forEach(t => {
+    document.getElementById('bd-task-' + t).classList.remove('checked');
+    document.getElementById('bd-check-' + t).textContent = '';
+  });
+
+  document.getElementById('backdateModal').classList.add('open');
+}
+
+function closeBackdate() {
+  document.getElementById('backdateModal').classList.remove('open');
+}
+
+function toggleBdTask(task) {
+  bdTaskState[task] = !bdTaskState[task];
+  const item = document.getElementById('bd-task-' + task);
+  const check = document.getElementById('bd-check-' + task);
+  if (bdTaskState[task]) {
+    item.classList.add('checked');
+    check.textContent = '✓';
+  } else {
+    item.classList.remove('checked');
+    check.textContent = '';
+  }
+}
+
+function handleBdUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  showToast('Compressing image... ⏳');
+  compressImage(file, 800, 1200, 0.6).then(compressed => {
+    bdUploadedImage = compressed;
+    document.getElementById('bdUploadText').textContent = '✅ Screenshot uploaded!';
+    document.getElementById('bdUploadArea').classList.add('has-file');
+    bdTaskState.calories = true;
+    document.getElementById('bd-task-calories').classList.add('checked');
+    document.getElementById('bd-check-calories').textContent = '✓';
+    showToast('📸 Screenshot ready!');
+  });
+}
+
+async function saveBackdate() {
+  const dateVal = document.getElementById('backdateDate').value;
+  if (!dateVal) { showToast('Please pick a date!'); return; }
+  const today = getTodayKey();
+  if (dateVal > today) { showToast('You can\'t log a future date!'); return; }
+  let targetMember = currentMember;
+  if (bdIsAdmin) {
+    targetMember = document.getElementById('backdateMemberSelect').value;
+    if (!targetMember) { showToast('Please select a member!'); return; }
+  }
+  const pts = Object.keys(bdTaskState).reduce((sum, k) => sum + (bdTaskState[k] ? POINTS[k] : 0), 0);
+  if (pts === 0) { showToast('Please tick at least one task!'); return; }
+  if (bdTaskState.exercise) {
+    const count = await getWeeklyExerciseCountDB(targetMember, dateVal);
+    if (count >= 3) {
+      showToast(`${targetMember} already has 3 exercise sessions this week! 🏋️‍♀️`);
+      bdTaskState.exercise = false;
+      document.getElementById('bd-task-exercise').classList.remove('checked');
+      document.getElementById('bd-check-exercise').textContent = '';
+      return;
+    }
+  }
+  showToast('Saving... ⏳');
+  try {
+    await saveLogToDB(targetMember, dateVal, bdTaskState, pts, bdUploadedImage, true);
+    closeBackdate();
+    if (!bdIsAdmin) {
+      const logs = await getMemberLogs(currentMember);
+      window._cachedLogs = logs;
+      window._cachedTotalPts = await getMemberPoints(currentMember);
+      updatePointsDisplay();
+      buildStreakRow(logs);
+    } else {
+      await loadAdminPanel();
+    }
+    showToast(`✅ Entry saved for ${targetMember} — +${pts} pts!`);
+  } catch(e) { showToast('Error saving entry!'); console.error(e); }
+}
+
+// Init
+async function init() {
+  try {
+    await populateMemberDropdown();
+  } catch(e) {
+    console.error('Init error:', e);
+    const sel = document.getElementById('memberSelect');
+    sel.innerHTML = '<option value="">⚠️ Error loading — refresh page</option>';
+  }
+  requestNotifications();
+  scheduleReminder();
+}
+init();
+</script>
+</body>
+</html>
