@@ -1571,7 +1571,10 @@ async function confirmReset() {
     showToast('Resetting... ⏳');
     try {
       const members = await getMembers();
-      await sbFetch('/logs', { method: 'DELETE', headers: {...HEADERS, 'Prefer': 'return=minimal'} });
+      await sbFetch('/logs?id=neq.00000000-0000-0000-0000-000000000000', {
+        method: 'DELETE',
+        headers: {...HEADERS, 'Prefer': 'return=minimal'}
+      });
       for (const name of members) {
         await updateMemberPoints(name, 0);
       }
@@ -1608,22 +1611,6 @@ function roundRectTop(ctx, x, y, w, h, r) {
   ctx.lineTo(x, y + r);
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
-}
-
-async function confirmReset() {
-  if (confirm('Are you sure you want to reset ALL points for a new 8-week round? This cannot be undone!')) {
-    showToast('Resetting... ⏳');
-    try {
-      const members = await getMembers();
-      await sbFetch('/logs', { method: 'DELETE', headers: {...HEADERS, 'Prefer': 'return=minimal'} });
-      for (const name of members) {
-        await updateMemberPoints(name, 0);
-      }
-      localStorage.setItem('fb_roundStart', getMonday(new Date()));
-      await loadAdminPanel();
-      showToast('Round reset! New 8 weeks started 🚀');
-    } catch(e) { showToast('Error resetting!'); console.error(e); }
-  }
 }
 
 // ---- UTILS ----
