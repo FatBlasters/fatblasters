@@ -1571,10 +1571,15 @@ async function confirmReset() {
     showToast('Resetting... ⏳');
     try {
       const members = await getMembers();
-      await sbFetch('/logs?id=neq.00000000-0000-0000-0000-000000000000', {
-        method: 'DELETE',
-        headers: {...HEADERS, 'Prefer': 'return=minimal'}
-      });
+      // Get all log IDs first then delete each one
+      const allLogs = await sbFetch('/logs?select=id');
+      for (const log of allLogs) {
+        await sbFetch(`/logs?id=eq.${log.id}`, {
+          method: 'DELETE',
+          headers: {...HEADERS, 'Prefer': 'return=minimal'}
+        });
+      }
+      // Reset all member points to zero
       for (const name of members) {
         await updateMemberPoints(name, 0);
       }
