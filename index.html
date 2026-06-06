@@ -808,11 +808,18 @@ async function getMembers() {
 }
 
 async function addMemberDB(name) {
-  await sbFetch('/members', { method: 'POST', body: JSON.stringify({ name, total_points: 0 }) });
+  await sbFetch('/members', { 
+    method: 'POST', 
+    headers: {...HEADERS, 'Prefer': 'return=minimal'},
+    body: JSON.stringify({ name, total_points: 0 }) 
+  });
 }
 
 async function removeMemberDB(name) {
-  await sbFetch(`/members?name=eq.${encodeURIComponent(name)}`, { method: 'DELETE' });
+  await sbFetch(`/members?name=eq.${encodeURIComponent(name)}`, { 
+    method: 'DELETE',
+    headers: {...HEADERS, 'Prefer': 'return=minimal'}
+  });
 }
 
 async function updateMemberPoints(name, points) {
