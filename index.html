@@ -471,7 +471,7 @@
 
       <div class="task-item" id="task-calories" onclick="toggleTask('calories')">
         <div class="task-left">
-          <span class="task-emoji">🔥</span>
+          <span class="task-emoji">🍴</span>
           <div>
             <div class="task-name">Calorie Deficit</div>
             <div class="task-pts">+5 points • Upload MFP screenshot below</div>
@@ -725,7 +725,7 @@
     <div style="margin-bottom:16px;">
       <label style="font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:10px;">Tasks Completed</label>
       <div class="task-item" id="bd-task-calories" onclick="toggleBdTask('calories')" style="margin-bottom:8px;">
-        <div class="task-left"><span class="task-emoji">🔥</span><div><div class="task-name">Calorie Deficit</div><div class="task-pts">+5 pts</div></div></div>
+        <div class="task-left"><span class="task-emoji">🍴</span><div><div class="task-name">Calorie Deficit</div><div class="task-pts">+5 pts</div></div></div>
         <div class="task-check" id="bd-check-calories"></div>
       </div>
       <div class="task-item" id="bd-task-water" onclick="toggleBdTask('water')" style="margin-bottom:8px;">
@@ -1182,7 +1182,7 @@ async function buildHistory() {
     const div = document.createElement('div');
     div.className = 'card';
     const taskIcons = [];
-    if (log.calories) taskIcons.push('🔥');
+    if (log.calories) taskIcons.push('🍴');
     if (log.water) taskIcons.push('💧');
     if (log.exercise) taskIcons.push('🏋️‍♀️');
     if (log.soul) taskIcons.push('❤️');
@@ -1263,7 +1263,7 @@ async function loadAdminPanel() {
     const div = document.createElement('div');
     div.className = 'admin-member';
     const taskIcons = todayLog ? [
-      todayLog.calories ? '🔥' : '',
+      todayLog.calories ? '🍴' : '',
       todayLog.water ? '💧' : '',
       todayLog.exercise ? '🏋️‍♀️' : '',
       todayLog.soul ? '❤️' : '',
