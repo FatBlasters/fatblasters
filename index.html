@@ -1303,10 +1303,18 @@ function getMonday(d) {
   return `${mon.getFullYear()}-${String(mon.getMonth()+1).padStart(2,'0')}-${String(mon.getDate()).padStart(2,'0')}`;
 }
 
+async function getRoundStart() {
+  try {
+    const rows = await sbFetch('/settings?key=eq.roundStart&select=value');
+    if (rows.length > 0) return rows[0].value;
+  } catch(e) { console.error('Error getting round start:', e); }
+  return localStorage.getItem('fb_roundStart') || getMonday(new Date());
+}
+
 async function buildWeeklyTable() {
   const wrap = document.getElementById('weeklyTableWrap');
   wrap.innerHTML = '<div class="text-muted text-center" style="padding:20px;">Loading... 🐢</div>';
-  const roundStart = localStorage.getItem('fb_roundStart') || getMonday(new Date());
+  const roundStart = await getRoundStart();
   const [members, allPts, allLogs] = await Promise.all([getMembers(), getAllMemberPoints(), getAllLogs()]);
 
   const weeklyData = members.map(name => {
@@ -1342,7 +1350,19 @@ async function buildWeeklyTable() {
 
 async function generateTableImage() {
   showToast('Generating image... ⏳');
-  const weeklyData = await buildWeeklyTable();
+  const roundStart = await getRoundStart();
+  const [members, allPts, allLogs] = await Promise.all([getMembers(), getAllMemberPoints(), getAllLogs()]);
+
+  const weeklyData = members.map(name => {
+    const weeks = [0,0,0,0,0,0,0,0];
+    allLogs.filter(l => l.member_name === name).forEach(log => {
+      const wk = getWeekNumber(log.log_date, roundStart);
+      if (wk >= 1 && wk <= 8) weeks[wk-1] += log.points;
+    });
+    const pts = allPts.find(p => p.name === name);
+    const total = pts ? pts.total_points : 0;
+    return { name, weeks, total };
+  }).sort((a,b) => b.total - a.total);
 
   const canvas = document.createElement('canvas');
   const colWidths = [160, 55, 55, 55, 55, 55, 55, 55, 55, 75];
@@ -1603,6 +1623,12 @@ async function confirmReset() {
         await updateMemberPoints(name, 0);
       }
       localStorage.setItem('fb_roundStart', getMonday(new Date()));
+      // Also save to Supabase so all devices use the same round start
+      await sbFetch('/settings', {
+        method: 'POST',
+        headers: {...HEADERS, 'Prefer': 'resolution=merge-duplicates'},
+        body: JSON.stringify({ key: 'roundStart', value: getMonday(new Date()) })
+      });
       await loadAdminPanel();
       showToast('Round reset! New 8 weeks started 🚀');
     } catch(e) { showToast('Error resetting!'); console.error(e); }
