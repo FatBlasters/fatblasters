@@ -871,7 +871,7 @@ async function getMemberLogs(memberName) {
 }
 
 async function getAllLogs() {
-  return await sbFetch('/logs?order=log_date.desc');
+  return await sbFetch('/logs?order=log_date.desc&select=id,member_name,log_date,calories,water,exercise,soul,points,backdated');
 }
 
 async function getWeeklyExerciseCountDB(memberName, forDate) {
