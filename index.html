@@ -1023,16 +1023,26 @@ async function loadMemberApp() {
 }
 
 function toggleTask(task) {
-  if (task === 'exercise' && !taskState.exercise) {
-    const count = getWeeklyExerciseCount(currentMember, getTodayKey());
-    if (count >= 3) {
-      showToast('Max 3 exercise sessions per week reached! 🏋️‍♀️');
-      return;
-    }
-  }
   taskState[task] = !taskState[task];
   updateTaskUI();
   updatePointsDisplay();
+  autoSaveLog();
+}
+
+let autoSaveTimer = null;
+function autoSaveLog() {
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(async () => {
+    if (!currentMember) return;
+    if (taskState.calories && !uploadedImage) return;
+    const pts = calcTodayPoints();
+    try {
+      const newTotal = await saveLogToDB(currentMember, getTodayKey(), taskState, pts, uploadedImage);
+      window._cachedTotalPts = newTotal;
+      updatePointsDisplay();
+      showToast('✅ Auto-saved!');
+    } catch(e) { console.error('Auto-save error:', e); }
+  }, 1500);
 }
 
 function updateTaskUI() {
@@ -1047,16 +1057,34 @@ function updateTaskUI() {
       check.textContent = '';
     }
   });
-  const exCount = getWeeklyExerciseCount(currentMember, getTodayKey()) + (taskState.exercise ? 1 : 0);
+
+  // Exercise count logic
+  const exCountWithoutToday = getWeeklyExerciseCount(currentMember, getTodayKey());
+  const exCountWithToday = exCountWithoutToday + (taskState.exercise ? 1 : 0);
   const exPtsEl = document.querySelector('#task-exercise .task-pts');
-  if (exPtsEl) {
-    const remaining = Math.max(0, 3 - exCount);
-    exPtsEl.textContent = `+3 points • 30 min minimum • ${exCount}/3 this week${exCount >= 3 ? ' ✅ Max reached' : ` (${remaining} left)`}`;
+  const exItem = document.getElementById('task-exercise');
+
+  if (taskState.exercise && exCountWithoutToday >= 3) {
+    exItem.style.borderColor = 'var(--yellow)';
+    exItem.style.background = 'rgba(255,215,0,0.08)';
+    if (exPtsEl) exPtsEl.innerHTML = '<span style="color:var(--yellow);">⚠️ Max reached — logged but no points! 3/3 this week</span>';
+  } else {
+    exItem.style.borderColor = '';
+    exItem.style.background = '';
+    if (exPtsEl) {
+      const remaining = Math.max(0, 3 - exCountWithToday);
+      exPtsEl.textContent = `+3 points • 30 min minimum • ${exCountWithToday}/3 this week${exCountWithToday >= 3 ? ' ✅ Max reached' : ` (${remaining} left)`}`;
+    }
   }
 }
 
 function calcTodayPoints() {
-  return Object.keys(taskState).reduce((sum, k) => sum + (taskState[k] ? POINTS[k] : 0), 0);
+  const exCountWithoutToday = getWeeklyExerciseCount(currentMember, getTodayKey());
+  const exercisePoints = taskState.exercise && exCountWithoutToday < 3 ? POINTS.exercise : 0;
+  return (taskState.calories ? POINTS.calories : 0) +
+         (taskState.water ? POINTS.water : 0) +
+         exercisePoints +
+         (taskState.soul ? POINTS.soul : 0);
 }
 
 function updatePointsDisplay() {
